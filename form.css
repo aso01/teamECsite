@@ -1,0 +1,82 @@
+@CHARSET "UTF-8";
+
+/* width-681px以上の場合 */
+/* テーブル部分 */
+.T_box {
+	margin: 4vh 10vw 1vh 10vw;
+	width: 80vw;
+}
+
+/* テーブル1行の間隔 */
+
+.T_box tr{
+	height:7vh;
+}
+
+/* 左テーブル部分 */
+.T_box th {
+	padding: 0vh 0vw 0vh 0.5vw;
+	width: 30vw;
+	text-align: left;
+}
+
+/* 左テーブル部分 フォント変更 */
+.T_box th label{
+	font-size: calc(7px + 0.9vmax);
+}
+
+/* 右テーブル部分 */
+.T_box td {
+	padding: 0vh 0vw 0vh 0.5vw;
+	width: 50vw;
+	height : calc(7px + 2vh);
+	border: 1px solid gray;
+	font-size : calc(7px + 0.8vmax);
+}
+
+/* 右テーブル部分 テキストエリア */
+.txt {
+	width: 49vw;
+	height : calc(7px + 3.5vh);
+	border: 1px solid gray;
+	font-size : calc(7px + 0.6vmax);
+	box-shadow:0px 1px 0px 0px inset;
+}
+.txt:focus {
+	border: 1px solid #ff9900;
+	outline: 0;
+}
+
+/* ボタン部分 */
+.btn {
+	display: block;
+}
+
+/* ログイン画面 テキストエリア */
+.txt_login {
+	width: 49vw;
+	height : calc(7px + 3.5vh);
+	border: 1px solid gray;
+	font-size : calc(7px + 0.6vmax);
+	box-shadow:0px 1px 0px 0px inset;
+	background: lightyellow;
+}
+.txt_login:focus {
+	border: 1px solid #ff9900;
+	outline: 0;
+}
+
+/* ログイン画面 チェックボックス */
+.box {
+	width: 50vw;
+	height : calc(7px + 3.5vh);
+	display: block;
+	margin: 3vh 0vw 0vh 10vw;
+	float: left;
+}
+
+/* 文字入力の際、オートコンプリート機能時の背景色を白に設定 */
+input:-webkit-autofill{
+-webkit-box-shadow:0 0 0px 1000px white inset;
+}
+

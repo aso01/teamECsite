@@ -64,8 +64,8 @@ public class LoginAction extends ActionSupport implements SessionAware {
 		UserInfoDAO userInfoDAO = new UserInfoDAO();
 
 		//DBに一致する会員情報がある場合(認証成功)
-		if(userInfoDAO.isExistsUserInfo(userId, password)){
-			if(userInfoDAO.login(userId, password) > 0) {
+		if(userInfoDAO.isExistsUserInfo(userId, password)
+			&& userInfoDAO.login(userId, password) > 0) {
 
 				// カートの情報をユーザーに紐づける
 				//DBからカート情報を取得
@@ -101,7 +101,6 @@ public class LoginAction extends ActionSupport implements SessionAware {
 				session.put("userId", userInfoDTO.getUserId());
 				//ログインフラグ(ログイン済みにする・ヘッダーの表記がログインからログアウトに変わる）
 				session.put("logined", 1);
-		}
 		} else {
 
 			//認証失敗
@@ -127,8 +126,23 @@ public class LoginAction extends ActionSupport implements SessionAware {
 
 		for (CartInfoDTO dto : cartInfoDTOListBySession) {
 
-			// sessionに入っている(画面に表示されている)カート情報と同じ商品のデータがすでにDBに存在するかをチェックする
+			//sessionに入っている(画面に表示されている)カート情報と同じ商品のデータがすでにDBに存在するかをチェックする
 			if (cartInfoDAO.isExistsInfo(userId, dto.getProductId())) {
+
+				//TODO
+				try {
+					//tempUserで購入した合計金額のこと
+					int tempsumPrice = Math.multiplyExact(dto.getProductCount(), dto.getPrice());
+					//[int型の限界チェック] 購入商品の合計金額が限界を超える際に,追加せずエラー
+
+					//既にカートにはいっていた合計金額
+					int subtotal = cartInfoDAO.getPrice (userId, dto.getProductId());
+
+					//追加前の商品Aの合計金額＋追加商品Aの購入金額
+					Math.addExact(subtotal, tempsumPrice);
+				} catch (ArithmeticException e) {
+					return false;
+				}
 
 				//存在する場合は、カート情報テーブルの購入個数を更新し、tempUserIdのデータは削除する
 				//以前にカート内に商品を入れている可能性があるので、今回入れた分と合算する必要がある
