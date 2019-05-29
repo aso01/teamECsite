@@ -126,23 +126,22 @@ public class LoginAction extends ActionSupport implements SessionAware {
 
 		for (CartInfoDTO dto : cartInfoDTOListBySession) {
 
+			//int型のチェック用の一時的なもの
+			int tempsumPrice = Math.multiplyExact(dto.getProductCount(), dto.getPrice());
+
+
+			//[int型の限界チェック]
+			//追加前のカート合計金額と追加商品の購入金額の総額が限界を超える際、追加せずにシステム画面へ遷移
+			try {
+
+			//現状のカート合計金額＋処理対象商品の購入金額
+				Math.addExact(cartInfoDAO.totalPrice(userId), tempsumPrice);
+			} catch(ArithmeticException e) {
+				return result;
+			}
+
 			//sessionに入っている(画面に表示されている)カート情報と同じ商品のデータがすでにDBに存在するかをチェックする
 			if (cartInfoDAO.isExistsInfo(userId, dto.getProductId())) {
-
-				//TODO
-				try {
-					//tempUserで購入した合計金額のこと
-					int tempsumPrice = Math.multiplyExact(dto.getProductCount(), dto.getPrice());
-					//[int型の限界チェック] 購入商品の合計金額が限界を超える際に,追加せずエラー
-
-					//既にカートにはいっていた合計金額
-					int subtotal = cartInfoDAO.getPrice (userId, dto.getProductId());
-
-					//追加前の商品Aの合計金額＋追加商品Aの購入金額
-					Math.addExact(subtotal, tempsumPrice);
-				} catch (ArithmeticException e) {
-					return false;
-				}
 
 				//存在する場合は、カート情報テーブルの購入個数を更新し、tempUserIdのデータは削除する
 				//以前にカート内に商品を入れている可能性があるので、今回入れた分と合算する必要がある
